@@ -18,7 +18,6 @@ class DefaultController extends Controller
     {
         $entry = $this->getDoctrine()->getRepository(Entity::class);
         $entrys = $entry->findAll();
-
         return $this->render('form/index.html.twig', array('entrys' =>$entrys));
     }
 
@@ -27,20 +26,25 @@ class DefaultController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction($request)
+    public function createAction(Request $request)
     {
         $entry = new Entity();
         $form = $this->createForm(Entity::class, $entry);
-        $form->handleRequest($request);
 
-        if ($form->isValid()){
-            $entry = $form->getData();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entry);
-            $em->flush();
-            return $this->redirectToRoute('form/edit.html.twig'.$entry->getId());
+        if ($request->isMethod($request::METHOD_POST)) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $entry = $form->getData();
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($entry);
+                $em->flush();
+                return $this->redirect($this->generateUrl('Create_entry'));
+            }
         }
-        return $this->render('form/create.html.twig');
+
+        return $this->render('form/create.html.twig', array(
+            'form' => $form->createView()
+        ));
     }
 
     /**
@@ -53,7 +57,7 @@ class DefaultController extends Controller
         $em->remove($user);
         $em->flush();
 
-        return $this->redirectToRoute('form/index.html.twig');
+        return $this->redirect($this->generateUrl('form/index.html.twig'));
     }
 
     /**
