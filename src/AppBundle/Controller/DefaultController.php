@@ -2,7 +2,8 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Entity;
+
+use AppBundle\Entity\Article;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,8 +17,10 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $entry = $this->getDoctrine()->getRepository(Entity::class);
+        $entry = new Article();
+        $entry = $this->getDoctrine()->getRepository(Article::class);
         $entrys = $entry->findAll();
+
         return $this->render('form/index.html.twig', array('entrys' =>$entrys));
     }
 
@@ -26,25 +29,21 @@ class DefaultController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction(Request $request)
+    public function createAction($request)
     {
-        $entry = new Entity();
-        $form = $this->createForm(Entity::class, $entry);
+        $entry = new Article();
+        $form = $this->createForm(Article::class, $entry);
 
-        if ($request->isMethod($request::METHOD_POST)) {
-            $form->handleRequest($request);
+        $form->handleRequest($request);
             if ($form->isValid()) {
-                $entry = $form->getData();
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($entry);
                 $em->flush();
+
                 return $this->redirect($this->generateUrl('Create_entry'));
             }
-        }
 
-        return $this->render('form/create.html.twig', array(
-            'form' => $form->createView()
-        ));
+        return $this->render('form/create.html.twig');
     }
 
     /**
@@ -53,11 +52,11 @@ class DefaultController extends Controller
     public function deleteAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository(Entity::class)->find($id);
+        $user = $em->getRepository(Article::class)->find($id);
         $em->remove($user);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('form/index.html.twig'));
+        return $this->redirectToRoute('entry_index');
     }
 
     /**
@@ -65,6 +64,7 @@ class DefaultController extends Controller
      */
     public function editAction()
     {
+
         return $this->render('form/edit.html.twig');
     }
 

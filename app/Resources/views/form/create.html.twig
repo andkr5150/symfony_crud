@@ -8,9 +8,21 @@
 
 <h1>Create</h1>
 
+
 {% block body %}
 
-{% endblock %}
 
+    {{ form_start(form, { 'action': path('entry_create'), 'method': 'POST', 'attr': {'class': 'Article'} }) }}
+    {{ form_errors(form) }}
+
+    {{ form_row(form.name) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.createdAt) }}
+
+    {{ form_rest(form) }}
+
+    <input type="submit" value="Submit" />
+
+{% endblock %}
 </body>
 </html>

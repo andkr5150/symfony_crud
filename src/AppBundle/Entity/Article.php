@@ -8,11 +8,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
- * Entity
+ * Article
  *
- * @ORM\Entity()
+ * @ORM\Article()
  */
-class Entity
+class Article
 {
     /**
      * @var int
@@ -60,9 +60,9 @@ class Entity
      *
      * @param string $name
      *
-     * @return Entity
+     * @return Article
      */
-    public function setName($name): Entity
+    public function setName($name): Article
     {
         $this->name = $name;
 
@@ -84,9 +84,9 @@ class Entity
      *
      * @param string $description
      *
-     * @return Entity
+     * @return Article
      */
-    public function setDescription(string $description): Entity
+    public function setDescription(string $description): Article
     {
         $this->description = $description;
 
@@ -108,9 +108,9 @@ class Entity
      *
      * @param \DateTime $createdAt
      *
-     * @return Entity
+     * @return Article
      */
-    public function setCreatedAt(\DateTime $createdAt): Entity
+    public function setCreatedAt(\DateTime $createdAt): Article
     {
         $this->createdAt = $createdAt;
 
