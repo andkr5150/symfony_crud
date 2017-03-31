@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 
 class DefaultController extends Controller
@@ -60,12 +61,34 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/edit" , name="entry_edit")
+     * @Route("/edit/{id}" , name="entry_edit")
      */
-    public function editAction()
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(Article::class)->find($id);
+
+        return $this->render('form/edit.html.twig', array('user' =>$user));
+    }
+
+    /**
+     * @Route("/update" , name="update_edit")
+     */
+    public function updateAction(Request $request)
     {
 
-        return $this->render('form/edit.html.twig');
+        $id = $request->request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(Article::class)->find($id);
+        $user->setName($request->request->get('name'));
+        $user->setDescription($request->request->get('description'));
+        $d = \DateTime::createFromFormat('Y-m-d H:i:s',$request->request->get('created_at'));
+        $user->setCreatedAt($d);
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('entry_index');
     }
 
 }

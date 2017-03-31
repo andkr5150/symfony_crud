@@ -111,7 +111,7 @@ class Article
      *
      * @return Article
      */
-    public function setCreatedAt(\DateTime $createdAt): Article
+    public function setCreatedAt( \DateTime $createdAt): Article
     {
         $this->createdAt = $createdAt;
 
