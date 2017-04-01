@@ -35,13 +35,11 @@ class DefaultController extends Controller
     {
         $entry = new Article();
         $entry->setCreatedAt(new \DateTime('tomorrow'));
-
         $form = $this->createForm(ArticleType::class ,$entry);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entry = $form->getData();
             $em->persist($entry);
             $em->flush();
 

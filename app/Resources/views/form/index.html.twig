@@ -7,6 +7,7 @@
 <body>
 {% block body %}
         {% for entry in entrys %}
+            {{ entry.id }} --
             <a href="{{ path('entry_edit', { 'id': entry.id }) }}">edit</a> -
             <a href="{{ path('entry_delete', { 'id': entry.id }) }}">delete</a>
                 {{ entry.name }} -
@@ -14,8 +15,6 @@
                 {% if entry.createdAt %}{{ entry.createdAt | date('Y-m-d H:i:s') }}{% endif %}
         <br/>
         {% endfor %}
-
-    <br/>
     <br/>
     <a href="{{ path('entry_create') }}">Create entry</a>
 {% endblock %}

@@ -10,8 +10,9 @@ use Symfony\Component\Validator\Constraints\DateTime;
 /**
  * Article
  *
- * @ORM\Article()
+ * @ORM\Entity
  */
+
 class Article
 {
     /**
@@ -74,9 +75,9 @@ class Article
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return $this->name;
+        return  (string) $this->name;
     }
 
     /**
@@ -98,9 +99,9 @@ class Article
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
-        return $this->description;
+        return (string)$this->description;
     }
 
     /**
