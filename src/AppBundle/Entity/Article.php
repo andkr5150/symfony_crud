@@ -7,7 +7,6 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
 
-
 /**
  * Article
  *
@@ -41,7 +40,7 @@ class Article
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
 
@@ -75,7 +74,7 @@ class Article
      *
      * @return string
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
@@ -87,7 +86,7 @@ class Article
      *
      * @return Article
      */
-    public function setDescription(string $description): Article
+    public function setDescription($description): Article
     {
         $this->description = $description;
 
@@ -99,7 +98,7 @@ class Article
      *
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription()
     {
         return $this->description;
     }
@@ -123,7 +122,7 @@ class Article
      *
      * @return \DateTime
      */
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }

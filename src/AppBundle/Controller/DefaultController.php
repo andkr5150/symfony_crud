@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Article;
+use AppBundle\Form\ArticleType;
+use Doctrine\ORM\Mapping as ORM;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 
 class DefaultController extends Controller
@@ -18,7 +18,6 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $entry = new Article();
         $entry = $this->getDoctrine()->getRepository(Article::class);
         $entrys = $entry->findAll();
 
@@ -27,24 +26,31 @@ class DefaultController extends Controller
 
     /**
      * @Route("/create", name="entry_create")
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction($request)
+    public function createAction(Request $request)
     {
         $entry = new Article();
-        $form = $this->createForm(Article::class, $entry);
+        $entry->setCreatedAt(new \DateTime('tomorrow'));
 
+        $form = $this->createForm(ArticleType::class ,$entry);
         $form->handleRequest($request);
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($entry);
-                $em->flush();
 
-                return $this->redirect($this->generateUrl('Create_entry'));
-            }
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entry = $form->getData();
+            $em->persist($entry);
+            $em->flush();
 
-        return $this->render('form/create.html.twig');
+            return $this->redirectToRoute('entry_index');
+        }
+
+        return $this->render('form/create.html.twig', array(
+            'outform' => $form->createView(),
+        ));
     }
 
     /**
@@ -76,7 +82,6 @@ class DefaultController extends Controller
      */
     public function updateAction(Request $request)
     {
-
         $id = $request->request->get('id');
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(Article::class)->find($id);
@@ -84,7 +89,6 @@ class DefaultController extends Controller
         $user->setDescription($request->request->get('description'));
         $d = \DateTime::createFromFormat('Y-m-d H:i:s',$request->request->get('created_at'));
         $user->setCreatedAt($d);
-
         $em->persist($user);
         $em->flush();
 
