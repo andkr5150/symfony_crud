@@ -19,7 +19,7 @@ class ArticleType extends  AbstractType
             ->add('name', TextType::class)
             ->add('description', TextType::class)
             ->add('created_at',  DateType::class)
-            ->add('submit', SubmitType::class, array('label' => 'Create'))
+            ->add('submit', SubmitType::class)
         ;
     }
 

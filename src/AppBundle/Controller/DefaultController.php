@@ -67,30 +67,23 @@ class DefaultController extends Controller
     /**
      * @Route("/edit/{id}" , name="entry_edit")
      */
-    public function editAction($id)
+    public function editAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $id = $request->get('id');
         $user = $em->getRepository(Article::class)->find($id);
+        $editform = $this->createForm(ArticleType::class, $user);
+        $editform->handleRequest($request);
 
-        return $this->render('form/edit.html.twig', array('user' =>$user));
-    }
+        if ($editform->isValid()) {
+            $em->persist($user);
+            $em->flush();
+            return $this->redirectToRoute('entry_index');
+        }
 
-    /**
-     * @Route("/update" , name="update_edit")
-     */
-    public function updateAction(Request $request)
-    {
-        $id = $request->request->get('id');
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository(Article::class)->find($id);
-        $user->setName($request->request->get('name'));
-        $user->setDescription($request->request->get('description'));
-        $d = \DateTime::createFromFormat('Y-m-d H:i:s',$request->request->get('created_at'));
-        $user->setCreatedAt($d);
-        $em->persist($user);
-        $em->flush();
-
-        return $this->redirectToRoute('entry_index');
+        return $this->render('form/edit.html.twig', array(
+            'edit_form' => $editform->createView(),
+        ));
     }
 
 }

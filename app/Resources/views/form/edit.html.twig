@@ -1,27 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-<h1>Edit</h1>
-
 {% block body %}
-<form method="POST" action="{{ path('update_edit') }}">
-    <input type="text" name="id" placeholder="id" size="7px" value="{{ user.id }}" >
-    <label for="name">name:</label>
-    <input type="text" name="name" placeholder="name"  value="{{ user.name }}">
-    <label for="description">description</label>
-    <input type="text" name="description" placeholder="description"  value="{{ user.description }}">
-    <label for="created_at">created_at</label>
-    <input type="text" name="created_at" placeholder="created_at"  value="{{ user.createdAt | date('Y-m-d H:i:s') }}">
-    <input type="submit" value="Редактировать" name="edit">
-</form>
-
+<h1>Edit</h1>
+    {{ form_start(edit_form) }}
+    {{ form_row(edit_form.name) }}
+    {{ form_row(edit_form.description) }}
+    {{ form_row(edit_form.created_at) }}
+    {{ form_row(edit_form.submit, { 'label': 'Edit' }) }}
+    {{ form_end(edit_form) }}
 {% endblock %}
 
-
-</body>
-</html>

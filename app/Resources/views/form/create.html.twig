@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-<h1>Create</h1>
-
-
 {% block body %}
+<h1>Create</h1>
     {{ form_start(outform) }}
-    {{ form_widget(outform) }}
+    {{ form_row(outform.name) }}
+    {{ form_row(outform.description) }}
+    {{ form_row(outform.created_at) }}
+    {{ form_row(outform.submit, { 'label': 'Create' }) }}
     {{ form_end(outform) }}
 {% endblock %}
-</body>
-</html>
