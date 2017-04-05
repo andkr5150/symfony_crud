@@ -78,6 +78,7 @@ class DefaultController extends Controller
         if ($editform->isValid()) {
             $em->persist($user);
             $em->flush();
+
             return $this->redirectToRoute('entry_index');
         }
 

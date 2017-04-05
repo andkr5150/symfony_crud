@@ -1,10 +1,5 @@
 {% block body %}
 <h1>Edit</h1>
-    {{ form_start(edit_form) }}
-    {{ form_row(edit_form.name) }}
-    {{ form_row(edit_form.description) }}
-    {{ form_row(edit_form.created_at) }}
-    {{ form_row(edit_form.submit, { 'label': 'Edit' }) }}
-    {{ form_end(edit_form) }}
+    {{ form(edit_form) }}
 {% endblock %}
 

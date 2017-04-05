@@ -1,9 +1,4 @@
 {% block body %}
 <h1>Create</h1>
-    {{ form_start(outform) }}
-    {{ form_row(outform.name) }}
-    {{ form_row(outform.description) }}
-    {{ form_row(outform.created_at) }}
-    {{ form_row(outform.submit, { 'label': 'Create' }) }}
-    {{ form_end(outform) }}
+    {{ form(outform) }}
 {% endblock %}
