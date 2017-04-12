@@ -12,7 +12,6 @@ use Symfony\Component\Validator\Constraints\DateTime;
  *
  * @ORM\Entity
  */
-
 class Article
 {
     /**

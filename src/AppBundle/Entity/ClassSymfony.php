@@ -8,8 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ClassSymfony
- *
- * @ORM\Entity()
+ * @ORM\Table(name="ClassSymfony")
+ * @ORM\Entity(repositoryClass="ClassSymfonyrepository")
  */
 class ClassSymfony
 {
