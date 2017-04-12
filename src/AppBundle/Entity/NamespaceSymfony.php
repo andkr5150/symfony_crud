@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * NamespaceSymfony
- * @ORM\Table(name="NamespaceSymfony")
- * @ORM\Entity(repositoryClass="NamespaceSymfonyrepository")
+ *
+ * @ORM\Entity
  */
 class NamespaceSymfony
 {
