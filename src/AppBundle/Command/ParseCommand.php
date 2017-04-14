@@ -6,6 +6,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
+use AppBundle\Entity\ClassSymfony;
+use AppBundle\Entity\InterfaceSymfony;
+use AppBundle\Entity\NamespaceSymfony;
 
 class ParseCommand extends Command
 {
@@ -19,39 +22,26 @@ class ParseCommand extends Command
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
-        $crawler = new Crawler();
-
         $html = file_get_contents('http://api.symfony.com/3.2/');
-        $crawler->addHtmlContent($html);
+        $crawler = new Crawler($html);
         $crawler = $crawler->filter('div.namespaces > div.namespace-container > ul > li > a');
 
-        $i=0;
         foreach ($crawler as $element){
-            $url = $element->getAttribute('href');
-//            $t_content = $element->textContent;
-            //var_dump("http://api.symfony.com/3.2/".$url . " - " . $t_content);
+            $url = 'http://api.symfony.com/3.2/'.$element->getAttribute('href');
+            var_dump('namespace - '.$url);
 
-            $crawler_classes = new Crawler();
-            $html_classes = file_get_contents('http://api.symfony.com/3.2/'.$url);
-            $crawler_classes->addHtmlContent($html_classes);
-            $crawler_classes = $crawler_classes->filter('#page-content > div.namespace-list');
+            $html_class = file_get_contents($url);
+            $craw_class = new Crawler($html_class);
 
-            foreach ($crawler_classes as $el){
-                $get_url = $el->getAttribute('href');
-                $t_content = $el->textContent;
-
-                if ($i==1) var_dump($t_content);
-                $i++; if ($i > 2) exit;
+            //class
+            foreach ($craw_class->filter('div.col-md-6 > a') as $item){
+                var_dump('class - http://api.symfony.com/3.2/'. str_replace('\\', '/', $element->nodeValue).'/'.$item->nodeValue.'.html');
             }
 
+            //interface
+            foreach ($craw_class->filter('div.col-md-6 > em > a') as $item){
+                var_dump('interface - http://api.symfony.com/3.2/'. str_replace('\\', '/', $element->nodeValue).'/'.$item->nodeValue.'.html');
+            }
         }
-
-
-
-
-
-
-
     }
 }
