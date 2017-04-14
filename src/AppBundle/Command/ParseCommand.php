@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,7 +11,8 @@ use AppBundle\Entity\ClassSymfony;
 use AppBundle\Entity\InterfaceSymfony;
 use AppBundle\Entity\NamespaceSymfony;
 
-class ParseCommand extends Command
+
+class ParseCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
@@ -25,23 +27,38 @@ class ParseCommand extends Command
         $html = file_get_contents('http://api.symfony.com/3.2/');
         $crawler = new Crawler($html);
         $crawler = $crawler->filter('div.namespaces > div.namespace-container > ul > li > a');
+        $em = $this->getContainer()->get('doctrine')->getManager();
 
         foreach ($crawler as $element){
             $url = 'http://api.symfony.com/3.2/'.$element->getAttribute('href');
-            var_dump('namespace - '.$url);
+            $namespace = new NamespaceSymfony();
+            $namespace->setName($element->textContent);
+            $namespace->setUrl($url);
+            $em->persist($namespace);
+
 
             $html_class = file_get_contents($url);
             $craw_class = new Crawler($html_class);
 
             //class
             foreach ($craw_class->filter('div.col-md-6 > a') as $item){
-                var_dump('class - http://api.symfony.com/3.2/'. str_replace('\\', '/', $element->nodeValue).'/'.$item->nodeValue.'.html');
+                $class = new ClassSymfony();
+                $class->setName($item->textContent);
+                $class->setUrl('http://api.symfony.com/3.2/'. str_replace('\\', '/', $element->nodeValue).'/'.$item->nodeValue.'.html');
+                $class->setNamespace($namespace);
+                $em->persist($class);
             }
 
             //interface
             foreach ($craw_class->filter('div.col-md-6 > em > a') as $item){
-                var_dump('interface - http://api.symfony.com/3.2/'. str_replace('\\', '/', $element->nodeValue).'/'.$item->nodeValue.'.html');
+                $interface = new InterfaceSymfony();
+                $interface->setName($item->textContent);
+                $interface->setUrl('http://api.symfony.com/3.2/'. str_replace('\\', '/', $element->nodeValue).'/'.$item->nodeValue.'.html');
+                $interface->setNamespace($namespace);
+                $em->persist($interface);
             }
         }
+        $em->flush();
     }
+
 }
