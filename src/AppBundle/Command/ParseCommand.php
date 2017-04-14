@@ -12,38 +12,45 @@ class ParseCommand extends Command
     protected function configure()
     {
         $this
-            // the name of the command (the part after "bin/console")
             ->setName('app:parse')
-            // the short description shown while running "php bin/console list"
             ->setDescription('Parse api.symfony.com')
-            // the full command description shown when running the command with
-            // the "--help" option
             ->setHelp('This command allows you to create a user...')
         ;
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
+        $crawler = new Crawler();
+
         $html = file_get_contents('http://api.symfony.com/3.2/');
-        $crawler = new Crawler($html);
+        $crawler->addHtmlContent($html);
+        $crawler = $crawler->filter('div.namespaces > div.namespace-container > ul > li > a');
 
-        $crawler1 = $crawler->filter('body#index > div#content > div#right-column > div#page-content > div.namespaces > div.namespace-container > ul > li > a');
-
-        //namespace
-        foreach ($crawler1 as $element){
+        $i=0;
+        foreach ($crawler as $element){
             $url = $element->getAttribute('href');
-            //var_dump($url);
+//            $t_content = $element->textContent;
+            //var_dump("http://api.symfony.com/3.2/".$url . " - " . $t_content);
+
+            $crawler_classes = new Crawler();
+            $html_classes = file_get_contents('http://api.symfony.com/3.2/'.$url);
+            $crawler_classes->addHtmlContent($html_classes);
+            $crawler_classes = $crawler_classes->filter('#page-content > div.namespace-list');
+
+            foreach ($crawler_classes as $el){
+                $get_url = $el->getAttribute('href');
+                $t_content = $el->textContent;
+
+                if ($i==1) var_dump($t_content);
+                $i++; if ($i > 2) exit;
+            }
+
         }
 
 
-        $crawler2 = $crawler->filter('body#index > div#content > div#right-column > div#page-content > div.container-fluid.underlined > div.row > div.col-md-6 > em >  a');
 
-        //interface
-        foreach ($crawler2 as $element){
 
-            $url = $element->getAttribute('href');
-            var_dump($url);
-        }
+
 
 
     }
