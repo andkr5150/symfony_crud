@@ -22,13 +22,18 @@ class ParseCommand extends ContainerAwareCommand
             ->setHelp('This command allows you to create a user...')
         ;
     }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $html = file_get_contents('http://api.symfony.com/3.2/');
         $crawler = new Crawler($html);
         $crawler = $crawler->filter('div.namespaces > div.namespace-container > ul > li > a');
-        $em = $this->getContainer()->get('doctrine')->getManager();
+//        $em = $this->getContainer()->get('doctrine')->getManager();
 
+        var_dump( ' namespace count = ' . count($crawler));
+        ParseCommand::addRecursion($crawler);
+
+/*
         foreach ($crawler as $element){
             $url = 'http://api.symfony.com/3.2/'.$element->getAttribute('href');
             $namespace = new NamespaceSymfony();
@@ -59,6 +64,14 @@ class ParseCommand extends ContainerAwareCommand
             }
         }
         $em->flush();
+*/
+    }
+
+    public function addRecursion(Crawler $cr, $index=0)
+    {
+        $el = $cr->eq($index++)->html();
+        var_dump($el);
+        if (count($cr) > $index) ParseCommand::addRecursion($cr, $index);
     }
 
 }
