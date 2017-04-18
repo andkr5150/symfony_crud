@@ -31,7 +31,7 @@ class ParseCommand extends ContainerAwareCommand
 //        $em = $this->getContainer()->get('doctrine')->getManager();
 
         var_dump( ' namespace count = ' . count($crawler));
-        ParseCommand::addRecursion($crawler);
+        $this->addRecursion($crawler);
 
 /*
         foreach ($crawler as $element){
@@ -71,6 +71,6 @@ class ParseCommand extends ContainerAwareCommand
     {
         $el = $cr->eq($index++)->html();
         var_dump($el);
-        if (count($cr) > $index) ParseCommand::addRecursion($cr, $index);
+        if (count($cr) > $index) $this->addRecursion($cr, $index);
     }
 }
