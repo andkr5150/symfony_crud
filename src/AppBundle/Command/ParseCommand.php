@@ -73,5 +73,4 @@ class ParseCommand extends ContainerAwareCommand
         var_dump($el);
         if (count($cr) > $index) ParseCommand::addRecursion($cr, $index);
     }
-
 }
