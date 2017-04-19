@@ -31,8 +31,7 @@ class ParseCommand extends ContainerAwareCommand
 //        $em = $this->getContainer()->get('doctrine')->getManager();
 
         var_dump( ' namespace count = ' . count($crawler));
-        $this->addRecursion($crawler);
-
+        $this->addRecursion($crawler, 'http://api.symfony.com/3.2/');
 /*
         foreach ($crawler as $element){
             $url = 'http://api.symfony.com/3.2/'.$element->getAttribute('href');
@@ -67,10 +66,34 @@ class ParseCommand extends ContainerAwareCommand
 */
     }
 
-    public function addRecursion(Crawler $cr, $index=0)
+    public function addRecursion(Crawler $cr, $nodeUrl)
     {
-        $el = $cr->eq($index++)->html();
-        var_dump($el);
-        if (count($cr) > $index) $this->addRecursion($cr, $index);
+        $html = file_get_contents($nodeUrl);
+        $crawler = new Crawler($html);
+        $nodes = $crawler->filter('div.namespaces > div.namespace-container > ul > li > a');
+        $nodes_class = $crawler->filter('div.col-md-6 > a');
+        $nodes_inter = $crawler->filter('div.col-md-6 > em > a');
+
+        if ($nodes->count() > 0) {
+            foreach($nodes as $node) {
+                $this->addRecursion($cr, 'http://api.symfony.com/3.2/'.$node->getAttribute('href'));
+                var_dump('namespace - '.$node->getAttribute('href'));
+            }
+        }
+
+        if ($nodes_class->count() > 0) {
+            foreach($nodes_class as $node) {
+                $this->addRecursion($cr, 'http://api.symfony.com/3.2/'. str_replace('../','', $node->getAttribute('href')));
+                var_dump('class - '.str_replace('../','', $node->getAttribute('href')));
+            }
+        }
+
+        if ($nodes_inter->count() > 0) {
+            foreach($nodes_inter as $node) {
+                $this->addRecursion($cr, 'http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
+                var_dump('interface - '.str_replace('../','', $node->getAttribute('href')));
+            }
+        }
+
     }
 }
