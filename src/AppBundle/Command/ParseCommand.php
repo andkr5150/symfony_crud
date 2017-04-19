@@ -77,21 +77,19 @@ class ParseCommand extends ContainerAwareCommand
         if ($nodes->count() > 0) {
             foreach($nodes as $node) {
                 $this->addRecursion($cr, 'http://api.symfony.com/3.2/'.$node->getAttribute('href'));
-                var_dump('namespace - '.$node->getAttribute('href'));
+                var_dump('namespace - '.'http://api.symfony.com/3.2/'.$node->getAttribute('href'));
             }
         }
 
         if ($nodes_class->count() > 0) {
             foreach($nodes_class as $node) {
-                $this->addRecursion($cr, 'http://api.symfony.com/3.2/'. str_replace('../','', $node->getAttribute('href')));
-                var_dump('class - '.str_replace('../','', $node->getAttribute('href')));
+                var_dump('class - '.'http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
             }
         }
 
         if ($nodes_inter->count() > 0) {
             foreach($nodes_inter as $node) {
-                $this->addRecursion($cr, 'http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
-                var_dump('interface - '.str_replace('../','', $node->getAttribute('href')));
+                var_dump('interface - '.'http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
             }
         }
 
