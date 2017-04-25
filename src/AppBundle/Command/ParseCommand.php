@@ -92,6 +92,5 @@ class ParseCommand extends ContainerAwareCommand
                 var_dump('interface - '.'http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
             }
         }
-
     }
 }
