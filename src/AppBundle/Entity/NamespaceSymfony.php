@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * NamespaceSymfony
+ *
+ * @Gedmo\Tree(type="nested")
  *
  * @ORM\Entity
  */
@@ -36,6 +39,18 @@ class NamespaceSymfony
      * @ORM\Column(name="url", type="string", length=200)
      */
     private $url;
+
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="NamespaceSymfony", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="NamespaceSymfony", mappedBy="parent")
+     */
+    private $children;
 
     /**
      * @ORM\OneToMany(targetEntity="InterfaceSymfony", mappedBy="namespace")
@@ -104,5 +119,25 @@ class NamespaceSymfony
         $this->url = $url;
 
         return $this;
+    }
+
+    /**
+     * @param NamespaceSymfony|null $parent
+     *
+     * @return NamespaceSymfony
+     */
+    public function setParent(NamespaceSymfony $parent = null): NamespaceSymfony
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return NamespaceSymfony|null
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

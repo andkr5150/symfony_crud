@@ -28,9 +28,8 @@ class ParseCommand extends ContainerAwareCommand
         $html = file_get_contents('http://api.symfony.com/3.2/');
         $crawler = new Crawler($html);
         $crawler = $crawler->filter('div.namespaces > div.namespace-container > ul > li > a');
-//        $em = $this->getContainer()->get('doctrine')->getManager();
 
-        var_dump( ' namespace count = ' . count($crawler));
+//      var_dump( ' namespace count = ' . count($crawler));
         $this->addRecursion($crawler, 'http://api.symfony.com/3.2/');
 /*
         foreach ($crawler as $element){
@@ -66,31 +65,46 @@ class ParseCommand extends ContainerAwareCommand
 */
     }
 
-    public function addRecursion(Crawler $cr, $nodeUrl)
+    public function addRecursion(Crawler $cr, $nodeUrl, NamespaceSymfony $parent = null)
     {
         $html = file_get_contents($nodeUrl);
         $crawler = new Crawler($html);
         $nodes = $crawler->filter('div.namespaces > div.namespace-container > ul > li > a');
         $nodes_class = $crawler->filter('div.col-md-6 > a');
         $nodes_inter = $crawler->filter('div.col-md-6 > em > a');
+        $em = $this->getContainer()->get('doctrine')->getManager();
 
-        if ($nodes->count() > 0) {
+        //if ($nodes->count() > 0) {
             foreach($nodes as $node) {
-                $this->addRecursion($cr, 'http://api.symfony.com/3.2/'.$node->getAttribute('href'));
-                var_dump('namespace - '.'http://api.symfony.com/3.2/'.$node->getAttribute('href'));
+                $url = 'http://api.symfony.com/3.2/'.$node->getAttribute('href');
+                $namespace = new NamespaceSymfony();
+                $namespace->setName($node->textContent);
+                $namespace->setUrl($url);
+                $namespace->setParent($parent);
+
+                $em->persist($namespace);
+
+                /// тут нужно правильно отдавать родителя!!!!!
+                $parent = $namespace;
+
+                $this->addRecursion($cr, 'http://api.symfony.com/3.2/'.$node->getAttribute('href'), $parent);
+                var_dump('http://api.symfony.com/3.2/'.$node->getAttribute('href'));
             }
-        }
+        //}
 
         if ($nodes_class->count() > 0) {
             foreach($nodes_class as $node) {
-                var_dump('class - '.'http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
+   //           var_dump('class - http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
             }
         }
 
         if ($nodes_inter->count() > 0) {
             foreach($nodes_inter as $node) {
-                var_dump('interface - '.'http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
+   //           var_dump('inter - http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
             }
         }
+
+        $em->flush();
+
     }
 }
