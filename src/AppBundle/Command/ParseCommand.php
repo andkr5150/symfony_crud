@@ -25,12 +25,12 @@ class ParseCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $html = file_get_contents('http://api.symfony.com/3.2/');
+        $html = file_get_contents('http://api.symfony.com/3.2/Symfony.html');
         $crawler = new Crawler($html);
-        $crawler = $crawler->filter('div.namespaces > div.namespace-container > ul > li > a');
+        $crawler = $crawler->filter('div.namespace-list > a');
 
-//      var_dump( ' namespace count = ' . count($crawler));
-        $this->addRecursion($crawler, 'http://api.symfony.com/3.2/');
+        //var_dump( ' namespace count = ' . count($crawler));
+        $this->addRecursion($crawler, 'http://api.symfony.com/3.2/Symfony.html');
 /*
         foreach ($crawler as $element){
             $url = 'http://api.symfony.com/3.2/'.$element->getAttribute('href');
@@ -69,14 +69,14 @@ class ParseCommand extends ContainerAwareCommand
     {
         $html = file_get_contents($nodeUrl);
         $crawler = new Crawler($html);
-        $nodes = $crawler->filter('div.namespaces > div.namespace-container > ul > li > a');
+        $nodes = $crawler->filter('div.namespace-list > a');
         $nodes_class = $crawler->filter('div.col-md-6 > a');
         $nodes_inter = $crawler->filter('div.col-md-6 > em > a');
         $em = $this->getContainer()->get('doctrine')->getManager();
 
         //if ($nodes->count() > 0) {
             foreach($nodes as $node) {
-                $url = 'http://api.symfony.com/3.2/'.$node->getAttribute('href');
+                $url = 'http://api.symfony.com/3.2/' . str_replace('../', '', $node->getAttribute('href'));
                 $namespace = new NamespaceSymfony();
                 $namespace->setName($node->textContent);
                 $namespace->setUrl($url);
@@ -84,11 +84,8 @@ class ParseCommand extends ContainerAwareCommand
 
                 $em->persist($namespace);
 
-                /// тут нужно правильно отдавать родителя!!!!!
-                $parent = $namespace;
-
-                $this->addRecursion($cr, 'http://api.symfony.com/3.2/'.$node->getAttribute('href'), $parent);
-                var_dump('http://api.symfony.com/3.2/'.$node->getAttribute('href'));
+                $this->addRecursion($cr, 'http://api.symfony.com/3.2/' . str_replace('../', '', $node->getAttribute('href')), $namespace);
+                var_dump('http://api.symfony.com/3.2/Symfony/'.str_replace('../', '', $node->getAttribute('href')));
             }
         //}
 
@@ -105,6 +102,5 @@ class ParseCommand extends ContainerAwareCommand
         }
 
         $em->flush();
-
     }
 }
