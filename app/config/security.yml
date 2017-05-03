@@ -3,18 +3,15 @@
 security:
 
     encoders:
-        Symfony\Component\Security\Core\User\User:
+        AppBundle\Entity\User:
             algorithm: bcrypt
             cost: 12
 
+
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-        in_memory:
-            memory:
-              users:
-                  admin:
-                    password: $2y$12$dV0LwiNO83pX094zuoEGOe0mLUdmRG5gy9x5zZZhJjJLMiRA.GEPO
-                    roles: ROLE_ADMIN
+        main:
+          entity: {class: AppBundle:User, property: username}
 
 
     firewalls:
@@ -24,8 +21,13 @@ security:
             security: false
 
         main:
-            anonymous: ~
-            http_basic: ~
+            pattern: /.*
+            form_login:
+                check_path: /login_check
+                login_path: /login
+            logout: true
+            security: true
+            anonymous: true
 
             # activate different ways to authenticate
 
@@ -37,4 +39,5 @@ security:
 
     access_control:
             # require ROLE_ADMIN for /admin*
-            - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: /admin/.*, role: ROLE_ADMIN }
+        - { path: /.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
