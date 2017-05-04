@@ -14,35 +14,13 @@ use Symfony\Component\Security\Core\SecurityContext;
 
 class DefaultController extends Controller
 {
-
     /**
      * @Route("/", name="admin")
      */
     public function adminAction()
     {
-        return $this->render('form/admin.html.twig');
+        return $this->redirectToRoute('entry_index');
     }
-
-    /**
-     * @Route("/", name="_security_check")
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function security_checkAction(Request $request)
-    {
-        if ($this->get($request)->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $this->get($request)->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
-        } else {
-            $error = $this->get($request)->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
-        }
-
-        return $this->render('form/admin.html.twig', array(
-            'last_username' => $this->get($request)->getSession()->get(SecurityContext::LAST_USERNAME),
-            'error' => $error
-        ));
-    }
-
 
     /**
      * @Route("/admin", name="entry_index")
@@ -56,7 +34,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("admin/create", name="entry_create")
+     * @Route("/admin/create", name="entry_create")
      *
      * @param Request $request
      *
@@ -83,7 +61,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("admin/delete/{id}", name="entry_delete")
+     * @Route("/admin/delete/{id}", name="entry_delete")
      */
     public function deleteAction($id)
     {
@@ -96,7 +74,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("admin/edit/{id}" , name="entry_edit")
+     * @Route("/admin/edit/{id}" , name="entry_edit")
      */
     public function editAction(Request $request)
     {

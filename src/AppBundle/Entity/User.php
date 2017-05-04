@@ -38,22 +38,12 @@ class User implements UserInterface
 
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @var string salt
      */
     protected $salt;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Role")
-     * @ORM\JoinTable(name="user_role",
-     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     * )
-     *
-     * @var ArrayCollection $userRoles
-     */
-    protected $userRoles;
 
     /**
      *
@@ -109,15 +99,7 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return $this->getUserRoles()->toArray();
-    }
-
-    /**
-     * @return ArrayCollection A Doctrine ArrayCollection
-     */
-    public function getUserRoles()
-    {
-        return $this->userRoles;
+        return array('ROLE_USER');
     }
 
     /**
@@ -129,7 +111,7 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        return $this->salt;
+        return null;
     }
 
     /**
