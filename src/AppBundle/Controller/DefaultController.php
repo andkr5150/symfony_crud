@@ -47,7 +47,7 @@ class DefaultController extends Controller
         $form = $this->createForm(ArticleType::class ,$entry);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entry);
             $em->flush();
