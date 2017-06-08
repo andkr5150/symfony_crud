@@ -25,5 +25,14 @@ class NamespaceSymfonyTest extends TestCase
         $this->assertEquals($testURL, $namespace->getUrl());
     }
 
+    public function testParentNamespace()
+    {
+        $namespace = new NamespaceSymfony();
+        $testPrNamespace = new NamespaceSymfony();
+        $namespace->setParent($testPrNamespace);
+        $this->assertEquals($testPrNamespace, $namespace->getParent());
+    }
+
+
 
 }

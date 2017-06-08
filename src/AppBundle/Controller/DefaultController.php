@@ -84,7 +84,7 @@ class DefaultController extends Controller
         $editform = $this->createForm(ArticleType::class, $user);
         $editform->handleRequest($request);
 
-        if ($editform->isValid()) {
+        if ($editform->isSubmitted()) {
             $em->persist($user);
             $em->flush();
 

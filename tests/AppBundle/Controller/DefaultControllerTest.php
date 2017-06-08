@@ -61,4 +61,27 @@ class DefaultControllerTest extends WebTestCase
 //        $this->assertTrue($crawler->filter('input')->count() > 1);
     }
 
+    public function testeditAction()
+    {
+        $client = static::createClient(array(), array(
+            'PHP_AUTH_USER' => 'root',
+            'PHP_AUTH_PW'   => '1234',
+        ));
+        $crawler = $client->request('GET', '/admin');
+        $linkEdit = $crawler->filter('a:contains("edit")')->eq(2)->link();
+        $crawler = $client->click($linkEdit);
+
+        $form = $crawler->selectButton('Submit')->form();
+        $form['article[name]'] = 'new_name_update';
+        $form['article[description]'] = 'new_desc_update';
+        $client->submit($form);
+
+        $this->assertTrue(
+            $client->getResponse()->isRedirect('/admin'));
+
+
+//        $this->assertTrue($crawler->filter('input')->count() > 1);
+
+    }
+
 }
