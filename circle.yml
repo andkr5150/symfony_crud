@@ -1,11 +1,11 @@
 machine:
   pre:
-    - sudo apt-get update; USE_PRECOMPILE=true sudo -E circleci-install php 7.1.5
+    - sudo apt-get update; USE_PRECOMPILE=true sudo -E circleci-install php 7.1.0
   services:
     - mysql
 
   php:
-    version: 7.1.5
+    version: 7.1.0
   environment:
     APP_ENV: testing
     DB_HOST: 127.0.0.1
