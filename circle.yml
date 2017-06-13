@@ -1,0 +1,26 @@
+machine:
+  pre:
+    - sudo apt-get update; USE_PRECOMPILE=true sudo -E circleci-install php 7.1.5
+  services:
+    - mysql
+
+  php:
+    version: 7.1.5
+  environment:
+    APP_ENV: testing
+    DB_HOST: 127.0.0.1
+    DB_DATABASE: m_baza
+    DB_USERNAME: root
+
+dependencies:
+  override:
+    - exit 0
+  pre:
+    - php -m
+    - composer install --no-interaction --dev
+    - bin/console doctrine:schema:update --force
+    - bin/console doctrine:fixtures:load -q
+
+test:
+ override:
+    - phpunit --no-configuration
