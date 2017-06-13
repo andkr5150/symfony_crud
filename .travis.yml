@@ -24,3 +24,7 @@ test:
   encoding: utf8
 
 script: vendor/bin/phpunit
+
+service:
+  - mysql
+  
