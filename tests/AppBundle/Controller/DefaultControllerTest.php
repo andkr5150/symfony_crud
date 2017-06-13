@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Controller\DefaultController;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\StringInput;
 
 
 class DefaultControllerTest extends WebTestCase
@@ -44,10 +45,10 @@ class DefaultControllerTest extends WebTestCase
      */
     public static function setUpMysql()
     {
-        //  self::runAppConsoleCommand('doctrine:database:drop --force');
-        //  self::runAppConsoleCommand('doctrine:database:create');
-        //   self::runAppConsoleCommand('doctrine:schema:update --force --verbose=3');
-        //   self::runAppConsoleCommand('doctrine:fixtures:load -q --verbose=3');
+          self::runAppConsoleCommand('doctrine:database:drop --force');
+          self::runAppConsoleCommand('doctrine:database:create');
+          self::runAppConsoleCommand('doctrine:schema:update --force --verbose=3');
+          self::runAppConsoleCommand('doctrine:fixtures:load -q --verbose=3');
     }
 
     public function testindexAction()

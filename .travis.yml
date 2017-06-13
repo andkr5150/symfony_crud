@@ -27,4 +27,3 @@ script: vendor/bin/phpunit
 
 service:
   - mysql
-  
