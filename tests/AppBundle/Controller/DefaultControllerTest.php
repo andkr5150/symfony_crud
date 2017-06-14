@@ -48,21 +48,6 @@ class DefaultControllerTest extends WebTestCase
         $this->assertTrue($crawler->filter('input')->count() > 1);
     }
 
-    public function testdeleteAction()
-    {
-        $client = static::createClient(array(), array(
-            'PHP_AUTH_USER' => 'root',
-            'PHP_AUTH_PW'   => '1234',
-        ));
-        $crawler = $client->request('GET', '/admin');
-
-        $linkCreate = $crawler->filter('a:contains("delete")')->eq(1)->link();
-        $crawler = $client->click($linkCreate); // delete
-
-        $this->assertTrue(
-            $client->getResponse()->isRedirect('/admin'));
-//        $this->assertTrue($crawler->filter('input')->count() > 1);
-    }
 
     public function testeditAction()
     {
@@ -71,7 +56,7 @@ class DefaultControllerTest extends WebTestCase
             'PHP_AUTH_PW'   => '1234',
         ));
         $crawler = $client->request('GET', '/admin');
-        $linkEdit = $crawler->filter('a:contains("edit")')->eq(2)->link();
+        $linkEdit = $crawler->filter('a:contains("edit")')->eq(0)->link();
         $crawler = $client->click($linkEdit);
 
         $form = $crawler->selectButton('Submit')->form();
@@ -85,6 +70,22 @@ class DefaultControllerTest extends WebTestCase
 
 //        $this->assertTrue($crawler->filter('input')->count() > 1);
 
+    }
+
+    public function testdeleteAction()
+    {
+        $client = static::createClient(array(), array(
+            'PHP_AUTH_USER' => 'root',
+            'PHP_AUTH_PW'   => '1234',
+        ));
+        $crawler = $client->request('GET', '/admin');
+
+        $linkCreate = $crawler->filter('a:contains("delete")')->eq(0)->link();
+        $crawler = $client->click($linkCreate); // delete
+
+        $this->assertTrue(
+            $client->getResponse()->isRedirect('/admin'));
+//        $this->assertTrue($crawler->filter('input')->count() > 1);
     }
 
 }
