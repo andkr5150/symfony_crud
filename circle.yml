@@ -17,7 +17,7 @@ dependencies:
     - exit 0
   pre:
     - php -m
-    - composer install --no-interaction --dev
+    #- composer install --no-interaction --dev
     - bin/console doctrine:schema:update --force
     - bin/console doctrine:fixtures:load -q
 
