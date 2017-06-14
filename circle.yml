@@ -18,8 +18,8 @@ dependencies:
   pre:
     - php -m
     #- composer install --no-interaction --dev
-    - bin/console doctrine:schema:update --force
-    - bin/console doctrine:fixtures:load -q
+    #- bin/console doctrine:schema:update --force
+    #- bin/console doctrine:fixtures:load -q
 
 test:
  override:
