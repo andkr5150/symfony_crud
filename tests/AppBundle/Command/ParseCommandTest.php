@@ -20,13 +20,11 @@ class ParseCommandTest extends KernelTestCase
         $command = $application->find('app:parse');
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
-            [
             'command'  => $command->getName(),
-            'username' => 'TEST'
-             ]
+            '--pages' => '1',
         ));
 
         $output = $commandTester->getDisplay();
-        $this->assertContains('Username: TEST', $output);
+        $this->assertEquals('', $output);
     }
 }

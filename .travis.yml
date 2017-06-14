@@ -23,7 +23,6 @@ test:
   username: root
   encoding: utf8
 
-script: vendor/bin/phpunit
+script:
+  vendor/bin/phpunit
 
-service:
-  - mysql

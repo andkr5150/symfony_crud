@@ -5,6 +5,7 @@ namespace AppBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use AppBundle\Entity\ClassSymfony;
@@ -20,6 +21,13 @@ class ParseCommand extends ContainerAwareCommand
             ->setName('app:parse')
             ->setDescription('Parse api.symfony.com')
             ->setHelp('This command allows you to create a user...')
+            ->addOption(
+                'pages',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'How many pages you want to parse?',
+                1000000
+            )
         ;
     }
 
