@@ -15,6 +15,7 @@ use AppBundle\Entity\NamespaceSymfony;
 
 class ParseCommand extends ContainerAwareCommand
 {
+
     protected function configure()
     {
         $this
@@ -26,7 +27,7 @@ class ParseCommand extends ContainerAwareCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'How many pages you want to parse?',
-                1000000
+                100000
             )
         ;
     }
@@ -37,8 +38,13 @@ class ParseCommand extends ContainerAwareCommand
         $crawler = new Crawler($html);
         $crawler = $crawler->filter('div.namespace-list > a');
 
+
+        $pages = $input->getOption('pages');
+
         //var_dump( ' namespace count = ' . count($crawler));
-        $this->addRecursion('http://api.symfony.com/3.2/Symfony.html', null);
+        $this->addRecursion('http://api.symfony.com/3.2/Symfony.html', null, $pages);
+
+
 /*
         foreach ($crawler as $element){
             $url = 'http://api.symfony.com/3.2/'.$element->getAttribute('href');
@@ -73,7 +79,7 @@ class ParseCommand extends ContainerAwareCommand
 */
     }
 
-    public function addRecursion($nodeUrl, NamespaceSymfony $parent = null)
+    public function addRecursion($nodeUrl, NamespaceSymfony $parent = null, $pages)
     {
         $html = file_get_contents($nodeUrl);
         $crawler = new Crawler($html);
@@ -92,6 +98,11 @@ class ParseCommand extends ContainerAwareCommand
 
                 $em->persist($namespace);
 
+                if ($pages==1){
+                    $em->flush();
+                    return;
+                }
+
                 $this->addRecursion('http://api.symfony.com/3.2/' . str_replace('../', '', $node->getAttribute('href')), $namespace);
                 var_dump('http://api.symfony.com/3.2/Symfony/'.str_replace('../', '', $node->getAttribute('href')));
             }
@@ -108,7 +119,8 @@ class ParseCommand extends ContainerAwareCommand
    //           var_dump('inter - http://api.symfony.com/3.2/'.str_replace('../','', $node->getAttribute('href')));
             }
         }
-
         $em->flush();
+
+
     }
 }
